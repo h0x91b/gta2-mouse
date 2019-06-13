@@ -177,8 +177,8 @@ void MainWindow::OnCommandsCaptureMouse()
 DWORD ptrToPedManager = 0x005e5bbc;
 DWORD ptrToGame = 0x005eb4fc;
 
-typedef Ped* GetPedById(int);
-GetPedById* (__stdcall fnGetPedByID) = (GetPedById*)0x0043ae10;
+typedef Ped* (__stdcall GetPedById)(int);
+GetPedById* fnGetPedByID = (GetPedById*)0x0043ae10;
 
 //Save* __thiscall Game::GetSaveSlotByIndex(Game* this, byte index);
 typedef Save* (__fastcall GetSaveSlotByIndex)(Game* game, DWORD edx, byte index);
@@ -278,8 +278,8 @@ UINT SpawnCarThread(LPVOID data)
 	double nAngle = playerPed->pedSprite->actualPosition->rotation / 4.0 + 270.0;
 	const double distance = 1;
 	Car* car = fnSpawnCar(
-		playerPed->pedSprite->actualPosition->x + cos(nAngle * (M_PI / 180.0)) * distance * 16384,
-		playerPed->pedSprite->actualPosition->y - sin(nAngle * (M_PI / 180.0)) * distance * 16384,
+		playerPed->pedSprite->actualPosition->x + (int)(cos(nAngle * (M_PI / 180.0)) * distance * 16384.0),
+		playerPed->pedSprite->actualPosition->y - (int)(sin(nAngle * (M_PI / 180.0)) * distance * 16384.0),
 		playerPed->pedSprite->actualPosition->z,
 		180 * 4,
 		info->model
