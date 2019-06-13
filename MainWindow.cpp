@@ -241,14 +241,20 @@ void MainWindow::CaptureMouse()
 	}
 }
 
-Car* MainWindow::SpawnCar(CAR_MODEL model)
+struct SPAWNCAR {
+	CAR_MODEL model;
+	MainWindow* win;
+};
+
+UINT SpawnCarThread(LPVOID data)
 {
+	SPAWNCAR* info = (SPAWNCAR*)data;
 	if (*(DWORD*)ptrToPedManager == 0) {
-		log(L"ptrToPedManager isn't set. Not in a game probably.");
+		//info->win->log(L"ptrToPedManager isn't set. Not in a game probably.");
 		return 0;
 	}
 
-	log(L"The car will be spawned in 3 secs on front of you");
+	//info->win->log(L"The car will be spawned in 3 secs on front of you");
 
 	S10* s10 = (S10*) * (DWORD*)0x00672f40;
 	fnShowBigOnScreenLabel(&s10->ptrToSomeStructRelToBIG_LABEL, 0, (WCHAR*)L"3!", 1);
@@ -261,14 +267,14 @@ Car* MainWindow::SpawnCar(CAR_MODEL model)
 	Ped* playerPed = fnGetPedByID(1);
 
 	if (!playerPed || playerPed->currentCar || !playerPed->pedSprite || !playerPed->pedSprite->actualPosition) {
-		log(L"Cannot find ped location");
+		//info->win->log(L"Cannot find ped location");
 		return 0;
 	}
 
-	log(L"Player ped -> %08X", playerPed);
+	//info->win->log(L"Player ped -> %08X", playerPed);
 
 
-	log(L"Spawn %d", model);
+	//info->win->log(L"Spawn %d", info->model);
 	double nAngle = playerPed->pedSprite->actualPosition->rotation / 4.0 + 270.0;
 	const double distance = 1;
 	Car* car = fnSpawnCar(
@@ -276,17 +282,22 @@ Car* MainWindow::SpawnCar(CAR_MODEL model)
 		playerPed->pedSprite->actualPosition->y - sin(nAngle * (M_PI / 180.0)) * distance * 16384,
 		playerPed->pedSprite->actualPosition->z,
 		180 * 4,
-		model
+		info->model
 	);
 	if (car) {
-		log(L"The car spawned at 0x%08X", car);
+		//info->win->log(L"The car spawned at 0x%08X", car);
 		fnShowBigOnScreenLabel(&s10->ptrToSomeStructRelToBIG_LABEL, 0, (WCHAR*)L"Car is here!", 10);
 	}
-	return car;
+
+	delete info;
+	return 0;
 }
 
 
 void MainWindow::OnSpawncarTank()
 {
-	SpawnCar(TANK);
+	SPAWNCAR *info = new SPAWNCAR;
+	info->win = this;
+	info->model = TANK;
+	::CreateThread(0, 0, (LPTHREAD_START_ROUTINE)SpawnCarThread, info, 0, 0);
 }

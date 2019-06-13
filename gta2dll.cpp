@@ -56,13 +56,10 @@ Cgta2dllApp::~Cgta2dllApp() {
 
 Cgta2dllApp theApp;
 
-// Cgta2dllApp initialization
-
 BOOL Cgta2dllApp::InitInstance()
 {
 	CWinApp::InitInstance();
 
-	MessageBoxA(0, "GTA 2 DLL", "Hello", 0);
 	m_mainWindow = new MainWindow();
 
 	m_mainWindow->Create(IDD_DIALOG1, CWnd::GetDesktopWindow());

@@ -3,7 +3,7 @@
 // MainWindow dialog
 #include "gta2.segments.fixed.exe.h"
 
-typedef enum TIMER {
+enum TIMER {
 	TIMER_CAPTURE_MOUSE
 };
 
@@ -39,6 +39,5 @@ public:
 	afx_msg void OnCommandsCaptureMouse();
 	bool captureMouse;
 	void CaptureMouse();
-	Car* SpawnCar(CAR_MODEL model);
 	afx_msg void OnSpawncarTank();
 };
