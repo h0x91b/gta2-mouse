@@ -8,8 +8,6 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
-
-#include "gta2.segments.fixed.exe.h"
 #include <string>
 
 // MainWindow dialog
@@ -42,6 +40,7 @@ BEGIN_MESSAGE_MAP(MainWindow, CDialogEx)
 	ON_COMMAND(ID_DEBUG_MAKEINT3CRASHTOATTACHDEBUGGER, &MainWindow::OnDebugMakeInt3Crash)
 	ON_COMMAND(ID_COMMANDS_HELLO, &MainWindow::OnCommandsHello)
 	ON_COMMAND(ID_COMMANDS_CAPTUREMOUSE, &MainWindow::OnCommandsCaptureMouse)
+	ON_COMMAND(ID_SPAWNCAR_TANK, &MainWindow::OnSpawncarTank)
 END_MESSAGE_MAP()
 
 
@@ -185,6 +184,14 @@ GetPedById* (__stdcall fnGetPedByID) = (GetPedById*)0x0043ae10;
 typedef Save* (__fastcall GetSaveSlotByIndex)(Game* game, DWORD edx, byte index);
 GetSaveSlotByIndex* fnGetSaveSlotByIndex = (GetSaveSlotByIndex*)0x004219e0;
 
+//void __thiscall ShowBigOnScreenLabel(void* this, WCHAR* txt, int timeToShowInSeconds);
+typedef void(__fastcall ShowBigOnScreenLabel)(void* ptr, DWORD edx, WCHAR* txt, int time);
+ShowBigOnScreenLabel* fnShowBigOnScreenLabel = (ShowBigOnScreenLabel*)0x004c6060;
+
+//void SpawnCar(int x, int y, int z, short rot, CAR_MODEL model)
+typedef Car* (SpawnCar)(int x, int y, int z, short rot, CAR_MODEL model);
+SpawnCar* fnSpawnCar = (SpawnCar*)0x00426e10;
+
 void MainWindow::CaptureMouse()
 {
 	if (*(DWORD*)ptrToPedManager == 0) {
@@ -232,4 +239,54 @@ void MainWindow::CaptureMouse()
 	if (playerPed->pedSprite) {
 		playerPed->pedSprite->spriteRotation = gtaAngle;
 	}
+}
+
+Car* MainWindow::SpawnCar(CAR_MODEL model)
+{
+	if (*(DWORD*)ptrToPedManager == 0) {
+		log(L"ptrToPedManager isn't set. Not in a game probably.");
+		return 0;
+	}
+
+	log(L"The car will be spawned in 3 secs on front of you");
+
+	S10* s10 = (S10*) * (DWORD*)0x00672f40;
+	fnShowBigOnScreenLabel(&s10->ptrToSomeStructRelToBIG_LABEL, 0, (WCHAR*)L"3!", 1);
+	Sleep(1000);
+	fnShowBigOnScreenLabel(&s10->ptrToSomeStructRelToBIG_LABEL, 0, (WCHAR*)L"2!", 1);
+	Sleep(1000);
+	fnShowBigOnScreenLabel(&s10->ptrToSomeStructRelToBIG_LABEL, 0, (WCHAR*)L"1!", 1);
+	Sleep(1000);
+
+	Ped* playerPed = fnGetPedByID(1);
+
+	if (!playerPed || playerPed->currentCar || !playerPed->pedSprite || !playerPed->pedSprite->actualPosition) {
+		log(L"Cannot find ped location");
+		return 0;
+	}
+
+	log(L"Player ped -> %08X", playerPed);
+
+
+	log(L"Spawn %d", model);
+	double nAngle = playerPed->pedSprite->actualPosition->rotation / 4.0 + 270.0;
+	const double distance = 1;
+	Car* car = fnSpawnCar(
+		playerPed->pedSprite->actualPosition->x + cos(nAngle * (M_PI / 180.0)) * distance * 16384,
+		playerPed->pedSprite->actualPosition->y - sin(nAngle * (M_PI / 180.0)) * distance * 16384,
+		playerPed->pedSprite->actualPosition->z,
+		180 * 4,
+		model
+	);
+	if (car) {
+		log(L"The car spawned at 0x%08X", car);
+		fnShowBigOnScreenLabel(&s10->ptrToSomeStructRelToBIG_LABEL, 0, (WCHAR*)L"Car is here!", 10);
+	}
+	return car;
+}
+
+
+void MainWindow::OnSpawncarTank()
+{
+	SpawnCar(TANK);
 }
