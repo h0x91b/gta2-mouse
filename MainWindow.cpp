@@ -41,6 +41,8 @@ BEGIN_MESSAGE_MAP(MainWindow, CDialogEx)
 	ON_COMMAND(ID_COMMANDS_HELLO, &MainWindow::OnCommandsHello)
 	ON_COMMAND(ID_COMMANDS_CAPTUREMOUSE, &MainWindow::OnCommandsCaptureMouse)
 	ON_COMMAND(ID_SPAWNCAR_TANK, &MainWindow::OnSpawncarTank)
+	ON_WM_HOTKEY()
+	ON_COMMAND(ID_SPAWNCAR_GT, &MainWindow::OnSpawncarGt)
 END_MESSAGE_MAP()
 
 
@@ -69,8 +71,20 @@ int MainWindow::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_gtaWindow = NULL;
 	firstPaint = true;
 
-	SetTimer(1, 50, NULL);
 	SetTimer(TIMER_CAPTURE_MOUSE, 1000 / 60, NULL);
+
+	RegisterHotKey(
+		GetSafeHwnd(),
+		1,
+		MOD_ALT | MOD_NOREPEAT,
+		0x54); //ALT+T
+
+	RegisterHotKey(
+		GetSafeHwnd(),
+		1,
+		MOD_ALT | MOD_NOREPEAT,
+		0x47); //ALT+G
+
 	return 0;
 }
 
@@ -299,5 +313,33 @@ void MainWindow::OnSpawncarTank()
 	SPAWNCAR *info = new SPAWNCAR;
 	info->win = this;
 	info->model = TANK;
+	::CreateThread(0, 0, (LPTHREAD_START_ROUTINE)SpawnCarThread, info, 0, 0);
+}
+
+
+void MainWindow::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
+{
+	log(L"OnHotKey(%X, %X, %X)", nHotKeyId, nKey1, nKey2);
+	switch (nKey2)
+	{
+	case 0x54:
+		OnSpawncarTank();
+		break;
+	case 0x47:
+		OnSpawncarGt();
+		break;
+	default:
+		break;
+	}
+
+	CDialogEx::OnHotKey(nHotKeyId, nKey1, nKey2);
+}
+
+
+void MainWindow::OnSpawncarGt()
+{
+	SPAWNCAR* info = new SPAWNCAR;
+	info->win = this;
+	info->model = GT24640;
 	::CreateThread(0, 0, (LPTHREAD_START_ROUTINE)SpawnCarThread, info, 0, 0);
 }

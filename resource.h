@@ -10,13 +10,14 @@
 #define ID_COMMANDS_CAPTUREMOUSE        32773
 #define ID_COMMANDS_SPAWNCAR            32774
 #define ID_SPAWNCAR_TANK                32775
+#define ID_SPAWNCAR_GT                  32778
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        3005
-#define _APS_NEXT_COMMAND_VALUE         32776
+#define _APS_NEXT_RESOURCE_VALUE        3006
+#define _APS_NEXT_COMMAND_VALUE         32779
 #define _APS_NEXT_CONTROL_VALUE         3001
 #define _APS_NEXT_SYMED_VALUE           3000
 #endif
