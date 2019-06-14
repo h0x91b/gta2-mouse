@@ -70,6 +70,7 @@ int MainWindow::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 	m_gtaWindow = NULL;
 	firstPaint = true;
+	frames = 0;
 
 	SetTimer(TIMER_CAPTURE_MOUSE, 1000 / 60, NULL);
 
@@ -209,12 +210,17 @@ SpawnCar* fnSpawnCar = (SpawnCar*)0x00426e10;
 void MainWindow::CaptureMouse()
 {
 	if (*(DWORD*)ptrToPedManager == 0) {
-		// not in game
+		if (frames++ % 60 == 0) {
+			log(L"Not in a game");
+		}
 		return;
 	}
 	Ped* playerPed = fnGetPedByID(1);
 
 	if (!playerPed || playerPed->currentCar) {
+		if (frames++ % 60 == 0) {
+			log(L"No player ped is found");
+		}
 		return;
 	}
 
@@ -223,6 +229,9 @@ void MainWindow::CaptureMouse()
 	GetCursorPos(&p);
 	::GetWindowRect(m_gtaWindow, &rect);
 	if (p.x < rect.left || p.x > rect.right || p.y < rect.top || p.y > rect.bottom) {
+		if (frames++ % 60 == 0) {
+			log(L"Cursor is outside of the game window");
+		}
 		return;
 	}
 
@@ -248,7 +257,9 @@ void MainWindow::CaptureMouse()
 
 	nAngle = 270 + angle;
 
-	log(L"cursor at %dx%d angle is %f", relX, relY, angle);
+	if (frames++ % 60 == 0) {
+		log(L"cursor at %dx%d angle is %f", relX, relY, angle);
+	}
 
 	if (playerPed->pedSprite) {
 		playerPed->pedSprite->spriteRotation = gtaAngle;

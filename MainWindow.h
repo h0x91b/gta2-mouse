@@ -42,4 +42,5 @@ public:
 	afx_msg void OnSpawncarTank();
 	afx_msg void OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2);
 	afx_msg void OnSpawncarGt();
+	uint frames;
 };
