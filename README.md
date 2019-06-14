@@ -1,5 +1,13 @@
-# gta2-mouse
-gta 2 mouse support, just for fun, not production ready, use it for your own risk.
+# GTA 2 mod
+GTA 2 mod, just for fun, not production ready, use it for your own risk.
+
+# Features
+
+* Mouse support
+
+[![GTA 2 With Mouse Support](http://img.youtube.com/vi/uDQ9SU7MWBM/0.jpg)](http://www.youtube.com/watch?v=uDQ9SU7MWBM "GTA 2 With Mouse Support")
+
+https://youtu.be/uDQ9SU7MWBM?list=PLJ0Ua3lA2EiiVo7u8Kq-2NGAx-F2qGMAM
 
 # Installation
 
@@ -18,7 +26,8 @@ Requirements
 6) run patched exe
 
 # Tutorial how to patch gta2 to load the dll using Ghidra [RUS]
-https://www.youtube.com/watch?v=B-q__1vFpOg
+[![Tutorial how to patch gta2 to load the dll using Ghidra](http://img.youtube.com/vi/B-q__1vFpOg/0.jpg)](http://www.youtube.com/watch?v=B-q__1vFpOg "Tutorial")
+
 
 # links
 * https://www.youtube.com/playlist?list=PLJ0Ua3lA2EiiVo7u8Kq-2NGAx-F2qGMAM - Ghidra tutorials
