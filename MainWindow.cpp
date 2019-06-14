@@ -30,6 +30,10 @@ void MainWindow::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT1, m_log);
+	DDX_Control(pDX, IDC_PEDX, m_pedX);
+	DDX_Control(pDX, IDC_PEDY, m_pedY);
+	DDX_Control(pDX, IDC_PEDZ, m_pedZ);
+	DDX_Control(pDX, IDC_PEDROT, m_pedRot);
 }
 
 
@@ -74,6 +78,7 @@ int MainWindow::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	frames = 0;
 
 	SetTimer(TIMER_CAPTURE_MOUSE, 1000 / 60, NULL);
+	SetTimer(TIMER_PED_INFO, 330, NULL);
 
 	RegisterHotKey(
 		GetSafeHwnd(),
@@ -112,10 +117,10 @@ int MainWindow::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	cars.insert(std::pair<std::wstring, DWORD>(L"BUG", 8));
 	cars.insert(std::pair<std::wstring, DWORD>(L"BUICK", 10));
 	cars.insert(std::pair<std::wstring, DWORD>(L"BUS", 11));
-	cars.insert(std::pair<std::wstring, DWORD>(L"CAR15", 15));
-	cars.insert(std::pair<std::wstring, DWORD>(L"CAR20", 20));
-	cars.insert(std::pair<std::wstring, DWORD>(L"CAR43", 43));
-	cars.insert(std::pair<std::wstring, DWORD>(L"CAR9", 9));
+	//cars.insert(std::pair<std::wstring, DWORD>(L"CAR15", 15));
+	//cars.insert(std::pair<std::wstring, DWORD>(L"CAR20", 20));
+	//cars.insert(std::pair<std::wstring, DWORD>(L"CAR43", 43));
+	//cars.insert(std::pair<std::wstring, DWORD>(L"CAR9", 9));
 	cars.insert(std::pair<std::wstring, DWORD>(L"COPCAR", 12));
 	cars.insert(std::pair<std::wstring, DWORD>(L"DART", 13));
 	cars.insert(std::pair<std::wstring, DWORD>(L"EDSEL", 14));
@@ -228,8 +233,17 @@ void MainWindow::OnPaint()
 
 void MainWindow::OnTimer(UINT_PTR nIDEvent)
 {
-	if (nIDEvent == TIMER_CAPTURE_MOUSE && captureMouse) {
-		CaptureMouse();
+	switch (nIDEvent) {
+	case TIMER_CAPTURE_MOUSE:
+		if (captureMouse) {
+			CaptureMouse();
+		}
+		break;
+	case TIMER_PED_INFO:
+		PedInfo();
+		break;
+	default:
+		break;
 	}
 
 	CDialogEx::OnTimer(nIDEvent);
@@ -484,4 +498,30 @@ void MainWindow::OnSpawncarGunjeep()
 	info->win = this;
 	info->model = GUNJEEP;
 	::CreateThread(0, 0, (LPTHREAD_START_ROUTINE)SpawnCarThread, info, 0, 0);
+}
+
+
+void MainWindow::PedInfo()
+{
+	WCHAR buf[256];
+	if (*(DWORD*)ptrToPedManager == 0) {
+		return;
+	}
+
+	Ped* playerPed = fnGetPedByID(1);
+
+	if (!playerPed || playerPed->currentCar || !playerPed->pedSprite || !playerPed->pedSprite->actualPosition) {
+		return;
+	}
+	swprintf(buf, 256, L"%.2f", playerPed->pedSprite->actualPosition->x / 16384.0);
+	m_pedX.SetWindowTextW(buf);
+
+	swprintf(buf, 256, L"%.2f", playerPed->pedSprite->actualPosition->y / 16384.0);
+	m_pedY.SetWindowTextW(buf);
+
+	swprintf(buf, 256, L"%.2f", playerPed->pedSprite->actualPosition->z / 16384.0);
+	m_pedZ.SetWindowTextW(buf);
+
+	swprintf(buf, 256, L"%d", playerPed->pedSprite->actualPosition->rotation);
+	m_pedRot.SetWindowTextW(buf);
 }

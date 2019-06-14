@@ -4,7 +4,8 @@
 #include "gta2.segments.fixed.exe.h"
 
 enum TIMER {
-	TIMER_CAPTURE_MOUSE
+	TIMER_CAPTURE_MOUSE,
+	TIMER_PED_INFO
 };
 
 class MainWindow : public CDialogEx
@@ -45,4 +46,9 @@ public:
 	afx_msg void OnSpawnCarClick(UINT nID);
 	uint frames;
 	afx_msg void OnSpawncarGunjeep();
+	CEdit m_pedX;
+	CEdit m_pedY;
+	CEdit m_pedZ;
+	CEdit m_pedRot;
+	void PedInfo();
 };
