@@ -9,6 +9,8 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <string>
+#include <iterator>
+#include <map>
 
 // MainWindow dialog
 
@@ -43,10 +45,9 @@ BEGIN_MESSAGE_MAP(MainWindow, CDialogEx)
 	ON_COMMAND(ID_SPAWNCAR_TANK, &MainWindow::OnSpawncarTank)
 	ON_WM_HOTKEY()
 	ON_COMMAND(ID_SPAWNCAR_GT, &MainWindow::OnSpawncarGt)
+	ON_COMMAND_RANGE(35000, 35000 + 83, &OnSpawnCarClick)
+	ON_COMMAND(ID_SPAWNCAR_GUNJEEP, &MainWindow::OnSpawncarGunjeep)
 END_MESSAGE_MAP()
-
-
-// MainWindow message handlers
 
 
 void MainWindow::OnBnClickedOk()
@@ -85,6 +86,115 @@ int MainWindow::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		1,
 		MOD_ALT | MOD_NOREPEAT,
 		0x47); //ALT+G
+
+	RegisterHotKey(
+		GetSafeHwnd(),
+		1,
+		MOD_ALT | MOD_NOREPEAT,
+		0x4a); //ALT+J
+
+	//AppendMenu();
+	CMenu *menu = GetMenu();
+	
+	CMenu* nMenu = new CMenu();
+	nMenu->CreatePopupMenu();
+
+	std::map<std::wstring, DWORD> cars;
+
+	cars.insert(std::pair<std::wstring, DWORD>(L"ALFA", 0));
+	cars.insert(std::pair<std::wstring, DWORD>(L"ALLARD", 1));
+	cars.insert(std::pair<std::wstring, DWORD>(L"AMDB4", 2));
+	cars.insert(std::pair<std::wstring, DWORD>(L"APC", 3));
+	cars.insert(std::pair<std::wstring, DWORD>(L"BANKVAN", 4));
+	cars.insert(std::pair<std::wstring, DWORD>(L"BMW", 5));
+	cars.insert(std::pair<std::wstring, DWORD>(L"BOXCAR", 6));
+	cars.insert(std::pair<std::wstring, DWORD>(L"BOXTRUCK", 7));
+	cars.insert(std::pair<std::wstring, DWORD>(L"BUG", 8));
+	cars.insert(std::pair<std::wstring, DWORD>(L"BUICK", 10));
+	cars.insert(std::pair<std::wstring, DWORD>(L"BUS", 11));
+	cars.insert(std::pair<std::wstring, DWORD>(L"CAR15", 15));
+	cars.insert(std::pair<std::wstring, DWORD>(L"CAR20", 20));
+	cars.insert(std::pair<std::wstring, DWORD>(L"CAR43", 43));
+	cars.insert(std::pair<std::wstring, DWORD>(L"CAR9", 9));
+	cars.insert(std::pair<std::wstring, DWORD>(L"COPCAR", 12));
+	cars.insert(std::pair<std::wstring, DWORD>(L"DART", 13));
+	cars.insert(std::pair<std::wstring, DWORD>(L"EDSEL", 14));
+	cars.insert(std::pair<std::wstring, DWORD>(L"EDSELFBI", 84));
+	cars.insert(std::pair<std::wstring, DWORD>(L"FIAT", 16));
+	cars.insert(std::pair<std::wstring, DWORD>(L"FIRETRUK", 17));
+	cars.insert(std::pair<std::wstring, DWORD>(L"GRAHAM", 18));
+	cars.insert(std::pair<std::wstring, DWORD>(L"GT24640", 19));
+	cars.insert(std::pair<std::wstring, DWORD>(L"GTRUCK", 21));
+	cars.insert(std::pair<std::wstring, DWORD>(L"GUNJEEP", 22));
+	cars.insert(std::pair<std::wstring, DWORD>(L"HOTDOG", 23));
+	cars.insert(std::pair<std::wstring, DWORD>(L"HOTDOG_D1", 24));
+	cars.insert(std::pair<std::wstring, DWORD>(L"HOTDOG_D2", 25));
+	cars.insert(std::pair<std::wstring, DWORD>(L"HOTDOG_D3", 26));
+	cars.insert(std::pair<std::wstring, DWORD>(L"HOTDOG_D4", 85));
+	cars.insert(std::pair<std::wstring, DWORD>(L"ICECREAM", 27));
+	cars.insert(std::pair<std::wstring, DWORD>(L"ISETLIMO", 28));
+	cars.insert(std::pair<std::wstring, DWORD>(L"ISETTA", 29));
+	cars.insert(std::pair<std::wstring, DWORD>(L"JEEP", 30));
+	cars.insert(std::pair<std::wstring, DWORD>(L"JEFFREY", 31));
+	cars.insert(std::pair<std::wstring, DWORD>(L"KRSNABUS", 86));
+	cars.insert(std::pair<std::wstring, DWORD>(L"LIMO", 32));
+	cars.insert(std::pair<std::wstring, DWORD>(L"LIMO2", 33));
+	cars.insert(std::pair<std::wstring, DWORD>(L"MEDICAR", 34));
+	cars.insert(std::pair<std::wstring, DWORD>(L"MERC", 35));
+	cars.insert(std::pair<std::wstring, DWORD>(L"MESSER", 36));
+	cars.insert(std::pair<std::wstring, DWORD>(L"MIURA", 37));
+	cars.insert(std::pair<std::wstring, DWORD>(L"MONSTER", 38));
+	cars.insert(std::pair<std::wstring, DWORD>(L"MORGAN", 39));
+	cars.insert(std::pair<std::wstring, DWORD>(L"MORRIS", 40));
+	cars.insert(std::pair<std::wstring, DWORD>(L"PICKUP", 41));
+	cars.insert(std::pair<std::wstring, DWORD>(L"RTYPE", 42));
+	cars.insert(std::pair<std::wstring, DWORD>(L"SPIDER", 44));
+	cars.insert(std::pair<std::wstring, DWORD>(L"SPRITE", 45));
+	cars.insert(std::pair<std::wstring, DWORD>(L"STINGRAY", 46));
+	cars.insert(std::pair<std::wstring, DWORD>(L"STRATOS", 47));
+	cars.insert(std::pair<std::wstring, DWORD>(L"STRATOSB", 48));
+	cars.insert(std::pair<std::wstring, DWORD>(L"STRIPETB", 49));
+	cars.insert(std::pair<std::wstring, DWORD>(L"STYPE", 50));
+	cars.insert(std::pair<std::wstring, DWORD>(L"STYPECAB", 51));
+	cars.insert(std::pair<std::wstring, DWORD>(L"SWATVAN", 52));
+	cars.insert(std::pair<std::wstring, DWORD>(L"T2000GT", 53));
+	cars.insert(std::pair<std::wstring, DWORD>(L"TANK", 54));
+	cars.insert(std::pair<std::wstring, DWORD>(L"TANKER", 55));
+	cars.insert(std::pair<std::wstring, DWORD>(L"TAXI", 56));
+	cars.insert(std::pair<std::wstring, DWORD>(L"TBIRD", 57));
+	cars.insert(std::pair<std::wstring, DWORD>(L"TOWTRUCK", 58));
+	//cars.insert(std::pair<std::wstring, DWORD>(L"TRAIN", 59));
+	//cars.insert(std::pair<std::wstring, DWORD>(L"TRAINCAB", 60));
+	//cars.insert(std::pair<std::wstring, DWORD>(L"TRAINFB", 61));
+	cars.insert(std::pair<std::wstring, DWORD>(L"TRANCEAM", 62));
+	cars.insert(std::pair<std::wstring, DWORD>(L"TRUKCAB1", 63));
+	cars.insert(std::pair<std::wstring, DWORD>(L"TRUKCAB2", 64));
+	cars.insert(std::pair<std::wstring, DWORD>(L"TRUKCONT", 65));
+	cars.insert(std::pair<std::wstring, DWORD>(L"TRUKTRNS", 66));
+	cars.insert(std::pair<std::wstring, DWORD>(L"TVVAN", 67));
+	cars.insert(std::pair<std::wstring, DWORD>(L"VAN", 68));
+	cars.insert(std::pair<std::wstring, DWORD>(L"VESPA", 69));
+	cars.insert(std::pair<std::wstring, DWORD>(L"VTYPE", 70));
+	cars.insert(std::pair<std::wstring, DWORD>(L"WBTWIN", 71));
+	cars.insert(std::pair<std::wstring, DWORD>(L"WRECK0", 72));
+	cars.insert(std::pair<std::wstring, DWORD>(L"WRECK1", 73));
+	cars.insert(std::pair<std::wstring, DWORD>(L"WRECK2", 74));
+	cars.insert(std::pair<std::wstring, DWORD>(L"WRECK3", 75));
+	cars.insert(std::pair<std::wstring, DWORD>(L"WRECK4", 76));
+	cars.insert(std::pair<std::wstring, DWORD>(L"WRECK5", 77));
+	cars.insert(std::pair<std::wstring, DWORD>(L"WRECK6", 78));
+	cars.insert(std::pair<std::wstring, DWORD>(L"WRECK7", 79));
+	cars.insert(std::pair<std::wstring, DWORD>(L"WRECK8", 80));
+	cars.insert(std::pair<std::wstring, DWORD>(L"WRECK9", 81));
+	cars.insert(std::pair<std::wstring, DWORD>(L"XK120", 82));
+	cars.insert(std::pair<std::wstring, DWORD>(L"ZCX5", 83));
+
+	std::map<std::wstring, DWORD>::iterator itr;
+	for (itr = cars.begin(); itr != cars.end(); ++itr) {
+		nMenu->AppendMenuW(MF_STRING, (UINT_PTR)(itr->second + 35000), itr->first.c_str());
+	}
+
+	menu->AppendMenuW(MF_POPUP, (UINT_PTR)nMenu->m_hMenu, L"Spawn car");
 
 	return 0;
 }
@@ -339,6 +449,9 @@ void MainWindow::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
 	case 0x47:
 		OnSpawncarGt();
 		break;
+	case 0x4a:
+		OnSpawncarGunjeep();
+		break;
 	default:
 		break;
 	}
@@ -352,5 +465,23 @@ void MainWindow::OnSpawncarGt()
 	SPAWNCAR* info = new SPAWNCAR;
 	info->win = this;
 	info->model = GT24640;
+	::CreateThread(0, 0, (LPTHREAD_START_ROUTINE)SpawnCarThread, info, 0, 0);
+}
+
+
+void MainWindow::OnSpawnCarClick(UINT nID) {
+	log(L"OnSpawnCarClick on %d", nID);
+
+	SPAWNCAR* info = new SPAWNCAR;
+	info->win = this;
+	info->model = (CAR_MODEL)(nID - 35000);
+	::CreateThread(0, 0, (LPTHREAD_START_ROUTINE)SpawnCarThread, info, 0, 0);
+}
+
+void MainWindow::OnSpawncarGunjeep()
+{
+	SPAWNCAR* info = new SPAWNCAR;
+	info->win = this;
+	info->model = GUNJEEP;
 	::CreateThread(0, 0, (LPTHREAD_START_ROUTINE)SpawnCarThread, info, 0, 0);
 }

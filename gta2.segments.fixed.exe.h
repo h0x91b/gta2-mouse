@@ -1,7 +1,6 @@
 typedef unsigned char   undefined;
 
 typedef unsigned int    ImageBaseOffset32;
-typedef unsigned char    bool;
 typedef unsigned char    byte;
 typedef unsigned int    dword;
 typedef long long    longlong;
